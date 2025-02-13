@@ -9,6 +9,9 @@ import { Label } from "@/components/ui/label"
 import { decode, encode } from "./encoding"
 import { EmojiSelector } from "@/components/emoji-selector"
 import { ALPHABET_LIST, EMOJI_LIST } from "./emoji"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 
 export function Base64EncoderDecoderContent() {
   const router = useRouter()
@@ -37,7 +40,7 @@ export function Base64EncoderDecoderContent() {
       setErrorText("")
     } catch (e) {
       setOutputText("")
-      setErrorText(`Error ${mode === "encode" ? "encoding" : "decoding"}: Invalid input`)
+      setErrorText(`Ops! ${mode === "encode" ? "encoding" : "decoding"}: Verifique o que foi digitado e tenta novamente 😅`)
     }
   }, [mode, selectedEmoji, inputText])
 
@@ -57,43 +60,69 @@ export function Base64EncoderDecoderContent() {
 
   return (
     <CardContent className="space-y-4">
-      <p>This tool allows you to encode a hidden message into an emoji or alphabet letter. You can copy and paste text with a hidden message in it to decode the message.</p>
 
       <div className="flex items-center justify-center space-x-2">
-        <Label htmlFor="mode-toggle">Decode</Label>
-        <Switch id="mode-toggle" checked={isEncoding} onCheckedChange={handleModeToggle} />
-        <Label htmlFor="mode-toggle">Encode</Label>
+        <Label htmlFor="mode-toggle">Descobrir</Label>
+        <Switch id="mode-toggle" checked={isEncoding} onCheckedChange={handleModeToggle} color="blue"  />
+        <Label htmlFor="mode-toggle">Esconder</Label>
       </div>
 
       <Textarea
-        placeholder={isEncoding ? "Enter text to encode" : "Paste an emoji to decode"}
+        placeholder={isEncoding ? "Digite o texto que deseja esconder no emoji" : "Cole o emoji para ver a mensagem escondida"}
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
         className="min-h-[100px]"
       />
 
-      <div className="font-bold text-sm">Pick an emoji</div>
-      <EmojiSelector
-        onEmojiSelect={setSelectedEmoji}
-        selectedEmoji={selectedEmoji}
-        emojiList={EMOJI_LIST}
-        disabled={!isEncoding}
-      />
-
-      <div className="font-bold text-sm">Or pick a standard alphabet letter</div>
-      <EmojiSelector
-        onEmojiSelect={setSelectedEmoji}
-        selectedEmoji={selectedEmoji}
-        emojiList={ALPHABET_LIST}
-        disabled={!isEncoding}
-      />
+      <div className="font-bold text-sm">Selecione um emoji</div>
+      <ScrollArea className="h-[200px] rounded-md border p-4">
+        <EmojiSelector
+          onEmojiSelect={setSelectedEmoji}
+          selectedEmoji={selectedEmoji}
+          emojiList={EMOJI_LIST}
+          disabled={!isEncoding}
+        />
+      </ScrollArea>
 
       <Textarea
-        placeholder={`${isEncoding ? "Encoded" : "Decoded"} output`}
+        placeholder={isEncoding ? "Emoji com mensagem escondida" : "Mensagem escondida"}
         value={outputText}
         readOnly
         className="min-h-[100px]"
       />
+            <div className="text-center">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="link" className="text-sm">
+              Como usar esta ferramenta? 🤔
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold text-center">Como usar esta ferramenta</h2>
+              
+              <div className="space-y-2">
+                <h3 className="font-semibold text-blue-600">Para esconder uma mensagem:</h3>
+                <ol className="list-decimal list-inside space-y-1 ml-2">
+                  <li>Selecione "Codificar" no botão abaixo</li>
+                  <li>Digite sua mensagem secreta na caixa de texto</li>
+                  <li>Escolha um emoji ou letra para esconder sua mensagem</li>
+                  <li>Copie o emoji/letra gerado e compartilhe onde quiser</li>
+                </ol>
+              </div>
+        
+              <div className="space-y-2">
+                <h3 className="font-semibold text-green-600">Para ler uma mensagem escondida:</h3>
+                <ol className="list-decimal list-inside space-y-1 ml-2">
+                  <li>Selecione "Decodificar" no botão abaixo</li>
+                  <li>Cole o emoji/letra recebido na caixa de texto</li>
+                  <li>A mensagem escondida aparecerá automaticamente</li>
+                </ol>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
 
       {errorText && <div className="text-red-500 text-center">{errorText}</div>}
     </CardContent>

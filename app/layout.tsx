@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Hide a message in an emoji',
+  title: 'Esconda mensagens em emojis',
 }
 
 export default function RootLayout({
@@ -11,7 +11,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-Br">
       <head>
         <link
           rel="icon"
